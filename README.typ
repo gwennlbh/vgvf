@@ -48,6 +48,12 @@ Players MAY choose to compress the global stylesheet to prevent it from growing 
 
 See diff-match-patch-rs (https://docs.rs/diff-match-patch-rs/0.5.1/diff_match_patch_rs/)'s `diff_to_delta` (in `Compat` mode)
 
+=== `U`nchanged frames
+
+`U` then a number (let's call it $n$)
+
+equivalent to $n$ `D` frames, each with only one unchanged chunk covering the entire previous frame.
+
 == Variants
 
 === Text

@@ -33,4 +33,7 @@ pub enum Frame {
     /// D frame
     /// Contains SVG content delta
     Delta(String),
+    /// U frame
+    /// Number of frames that are unchanged
+    Unchanged(u32),
 }

@@ -18,6 +18,7 @@ pub struct Renderer {
 impl Renderer {
     pub fn step(&mut self, frame: &Frame) -> Result<()> {
         match frame {
+            Frame::Unchanged(_) => {},
             Frame::Style(rules) => self.stylesheet += &rules,
             Frame::Full(content) => self.svg_content = content.to_string(),
             Frame::Initialization(InitializationParameters { d, w, h, bg }, svg_attributes) => {
@@ -50,5 +51,16 @@ impl Renderer {
             attrs = self.svg_attributes,
             content = self.svg_content
         )
+    }
+}
+
+impl Frame {
+    pub fn triggers_new_images(&self) -> u32 {
+        match self {
+            Frame::Full(_) => 1,
+            Frame::Delta(_) => 1,
+            Frame::Unchanged(count) => *count,
+            _ => 0,
+        }
     }
 }

@@ -27,7 +27,7 @@ impl Transcoder<String> for HTMLTranscoder {
         for frame in frames {
             self.renderer.step(&frame)?;
 
-            if frame.triggers_new_image() {
+            for _ in 0..frame.triggers_new_images() {
                 encoded_frames.push(HTMLFrame {
                     style: self.renderer.stylesheet.to_base64(),
                     svg: self.renderer.svg_tag().to_base64(),

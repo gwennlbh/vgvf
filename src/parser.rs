@@ -6,15 +6,7 @@ pub const MAGIC: &str = "vgv1";
 #[derive(Default)]
 pub struct Parser;
 
-impl Frame {
-    pub fn triggers_new_image(&self) -> bool {
-        match self {
-            Frame::Full(_) => true,
-            Frame::Delta(_) => true,
-            _ => false,
-        }
-    }
-}
+
 
 impl Parser {
     pub fn new() -> Self {

@@ -110,7 +110,7 @@ impl Transcoder<std::path::PathBuf> for MP4Transcoder {
             self.renderer.step(&frame)?;
             // Process the frame for MP4 encoding
 
-            if frame.triggers_new_image() {
+            for _ in 0..frame.triggers_new_images() {
                 tx.send((
                     self.renderer.svg_tag().replace(
                         "</svg>",
