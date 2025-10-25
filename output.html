@@ -1,0 +1,26 @@
+
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>VGV Player</title>
+                    <script>
+                    window.frameNo = 1;
+                    const frames = [{"svg":"PHN2ZyB3aWR0aD0iNDAiLCBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgNDAgNDAiPjxyZWN0IHg9MTAgeT0xMCB3aWR0aD0xMCBoZWlnaHQ9MTAgY2xhc3M9cmVkPjwvc3ZnPg==","style":"LnJlZHtmaWxsOnJlZH0="},{"svg":"PHN2ZyB3aWR0aD0iNDAiLCBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgNDAgNDAiPjxyZWN0IHg9MjAgeT0xMCB3aWR0aD0xMCBoZWlnaHQ9MTAgY2xhc3M9cmVkPjwvc3ZnPg==","style":"LnJlZHtmaWxsOnJlZH0="}];
+                    const decoder = new TextDecoder('utf-8');
+                    function fromBase64(str) {
+                        return decoder.decode(Uint8Array.fromBase64(str));
+                    }
+                    setInterval(() => {
+                        window.frameNo = (window.frameNo + 1) % frames.length;
+                        const frame = frames[window.frameNo];
+                        document.body.innerHTML = fromBase64(frame.svg);
+                        document.querySelector('style').innerHTML = fromBase64(frame.style);
+                    }, 1000);
+                </script>
+                    <style>.red{fill:red}</style>
+                </head>
+                <body>
+                    <svg width="40", height="40" viewBox="0 0 40 40"><rect x=10 y=10 width=10 height=10 class=red></svg>
+                </body>
+            </html>

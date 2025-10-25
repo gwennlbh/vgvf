@@ -1,28 +1,18 @@
 use crate::{Frame, InitializationParameters};
 use anyhow::{Result, anyhow};
-use diff_match_patch_rs::DiffMatchPatch;
-use std::time::Duration;
 
 pub const MAGIC: &str = "vgv1";
 
 #[derive(Default)]
-pub struct Parser {
-    pub stylesheet: String,
-    pub svg_content: String,
-    pub audio_bytes: Vec<u8>,
-    pub dmp: DiffMatchPatch,
-    pub frame_duration: Duration,
-    pub current_time: Duration,
-    pub svg_attributes: String,
-}
+pub struct Parser;
 
-pub trait VGVParsable {
-    fn parse_as_vgv(&self) -> Result<Vec<Frame>>;
-}
-
-impl VGVParsable for String {
-    fn parse_as_vgv(&self) -> Result<Vec<Frame>> {
-        Parser::new().parse_frames(self)
+impl Frame {
+    pub fn triggers_new_image(&self) -> bool {
+        match self {
+            Frame::Full(_) => true,
+            Frame::Delta(_) => true,
+            _ => false,
+        }
     }
 }
 
@@ -31,7 +21,7 @@ impl Parser {
         Self::default()
     }
 
-    pub fn parse_frames(&mut self, raw_frames: &str) -> Result<Vec<Frame>> {
+    pub fn parse(&mut self, raw_frames: &str) -> Result<Vec<Frame>> {
         let mut out = Vec::new();
         for (i, line) in raw_frames.lines().enumerate() {
             match i {
@@ -62,12 +52,36 @@ impl Parser {
                     .ok_or(anyhow!("Missing frame duration"))?
                     .parse()?;
 
+                let frame_width = parts
+                    .next()
+                    .ok_or(anyhow!("Missing frame width"))?
+                    .parse::<u32>()?;
+
+                let frame_height = parts
+                    .next()
+                    .ok_or(anyhow!("Missing frame height"))?
+                    .parse::<u32>()?;
+
                 Ok(Frame::Initialization(
-                    InitializationParameters { d: frame_duration },
+                    InitializationParameters {
+                        d: frame_duration,
+                        w: frame_width,
+                        h: frame_height,
+                    },
                     parts.last().unwrap_or("").to_string(),
                 ))
             }
             _ => Err(anyhow!("Unknown frame type {}", first_char)),
         }
+    }
+}
+
+pub trait VGVParsable {
+    fn parse_as_vgv(&self) -> Result<Vec<Frame>>;
+}
+
+impl VGVParsable for String {
+    fn parse_as_vgv(&self) -> Result<Vec<Frame>> {
+        Parser::new().parse(self)
     }
 }

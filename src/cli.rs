@@ -1,5 +1,9 @@
 use diff_match_patch_rs::{Compat, DiffMatchPatch, dmp::Diff};
-use vgv::{self, Frame, parser::VGVParsable, renderers::Renderer, renderers::html::HTMLRenderer};
+use vgv::{
+    self, Frame, MP4Encoder,
+    encoders::{Encoder, html::HTMLEncoder},
+    parser::VGVParsable,
+};
 
 pub fn main() {
     let mut args = pico_args::Arguments::from_env();
@@ -12,10 +16,14 @@ pub fn main() {
         .expect("Failed to parse frames");
 
     std::fs::write(
-        "player.html",
-        HTMLRenderer::new()
-            .encode(frames)
+        "output.html",
+        HTMLEncoder::new()
+            .encode(frames.clone())
             .expect("Couldn't render to HTML"),
     )
-    .expect("Couldn't write file")
+    .expect("Couldn't write file");
+
+    MP4Encoder::new("output.mp4", "audio.mp3", 800, 600, 30)
+        .encode(frames)
+        .expect("Couldn't render to MP4");
 }
