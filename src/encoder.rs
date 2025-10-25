@@ -7,6 +7,8 @@ use crate::{Frame, InitializationParameters, parser::MAGIC};
 pub struct Encoder {
     pub frames: Vec<Frame>,
     last_frame_svg: Option<String>,
+    /// Every how many frames do we insert a full frame
+    pub full_diff_ratio: usize,
 }
 
 impl Encoder {
@@ -14,12 +16,13 @@ impl Encoder {
         Self {
             frames: vec![Frame::Initialization(params, svg_attrs)],
             last_frame_svg: None,
+            full_diff_ratio: 100,
         }
     }
 
     pub fn encode_svg(&mut self, svg_contents: String) -> () {
         // Add a new full frame every 100 frames
-        if self.frames.len() % 100 == 0 {
+        if self.frames.len() % self.full_diff_ratio == 0 {
             self.push_full_frame(svg_contents);
         } else {
             self.push_diff_frame(svg_contents);
