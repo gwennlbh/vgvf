@@ -20,26 +20,10 @@ impl Encoder {
     pub fn encode_svg(&mut self, svg_contents: String) -> () {
         // Add a new full frame every 100 frames
         if self.frames.len() % 100 == 0 {
-            self.frames.push(Frame::Full(svg_contents.clone()));
+            self.push_full_frame(svg_contents);
         } else {
-            if let None = self.last_frame_svg {
-                self.frames.push(Frame::Full(svg_contents.clone()));
-                return;
-            }
-
-            let dmp = diff_match_patch_rs::DiffMatchPatch::default();
-            let diffs = dmp
-                .diff_main::<Compat>(self.last_frame_svg.as_ref().unwrap(), &svg_contents.clone())
-                .expect("Couldn't diff with previous full frame");
-
-            let delta = dmp
-                .diff_to_delta(&diffs)
-                .expect("Couldn't crush diff into delta");
-
-            self.frames.push(Frame::Delta(delta));
+            self.push_diff_frame(svg_contents);
         }
-
-        self.last_frame_svg = Some(svg_contents);
     }
 
     pub fn dump(&self, writer: &mut impl Write) -> () {
@@ -47,6 +31,30 @@ impl Encoder {
         for frame in &self.frames {
             writeln!(writer, "{}", frame.encode()).expect("Couldn't write frame")
         }
+    }
+
+    fn push_full_frame(&mut self, svg_contents: String) {
+        self.frames.push(Frame::Full(svg_contents.clone()));
+        self.last_frame_svg = Some(svg_contents);
+    }
+
+    fn push_diff_frame(&mut self, svg_contents: String) {
+        if let None = self.last_frame_svg {
+            self.push_full_frame(svg_contents);
+            return;
+        }
+
+        let dmp = diff_match_patch_rs::DiffMatchPatch::default();
+        let diffs = dmp
+            .diff_main::<Compat>(self.last_frame_svg.as_ref().unwrap(), &svg_contents)
+            .expect("Couldn't diff with previous full frame");
+
+        let delta = dmp
+            .diff_to_delta(&diffs)
+            .expect("Couldn't crush diff into delta");
+
+        self.frames.push(Frame::Delta(delta));
+        self.last_frame_svg = Some(svg_contents)
     }
 }
 
