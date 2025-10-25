@@ -1,5 +1,5 @@
-pub mod parser;
 pub mod encoders;
+pub mod parser;
 pub use encoders::{Encoder, HTMLEncoder, MP4Encoder};
 pub mod renderer;
 pub use renderer::Renderer;
@@ -16,7 +16,7 @@ pub struct InitializationParameters {
 
 #[derive(Debug, Clone)]
 pub enum Frame {
-    /// I frame 
+    /// I frame
     /// Contains vgv-specific params, svg attributes
     Initialization(InitializationParameters, String),
     /// S frame
@@ -27,7 +27,7 @@ pub enum Frame {
     Full(String),
     /// D frame
     /// Contains SVG content delta
-    Delta(String)
+    Delta(String),
 }
 
 pub use parser::Parser;

@@ -1,6 +1,5 @@
-use diff_match_patch_rs::{Compat, DiffMatchPatch, dmp::Diff};
 use vgv::{
-    self, Frame, MP4Encoder,
+    self, MP4Encoder,
     encoders::{Encoder, html::HTMLEncoder},
     parser::VGVParsable,
 };

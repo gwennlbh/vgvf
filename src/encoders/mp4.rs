@@ -1,6 +1,6 @@
-use std::{io::Write, thread, time::Duration};
+use std::{io::Write, thread};
 
-use crate::{Encoder, Frame, InitializationParameters, Renderer};
+use crate::{Encoder, Frame, Renderer};
 
 pub struct MP4Encoder {
     pub renderer: Renderer,

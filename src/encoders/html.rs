@@ -1,5 +1,5 @@
 use crate::{Encoder, Frame, Renderer};
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 use base64::prelude::*;
 use serde::Serialize;
 
