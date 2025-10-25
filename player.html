@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>VGV Player</title>
+<script>
+                    window.frameNo = 0;
+                    const frames = ["PHN0eWxlPi5yZWR7ZmlsbDpyZWR9Cjwvc3R5bGU+CjxzdmcgaGVpZ2h0PSI0MCIgd2lkdGg9IjQwIiB2aWV3Qm94PSIwIDAgNDAgNDAiPgo8cmVjdCB4PTEwIHk9MTAgd2lkdGg9MTAgaGVpZ2h0PTEwIGNsYXNzPXJlZD4KPC9zdmc+Cg==","PHN0eWxlPi5yZWR7ZmlsbDpyZWR9Cjwvc3R5bGU+CjxzdmcgaGVpZ2h0PSI0MCIgd2lkdGg9IjQwIiB2aWV3Qm94PSIwIDAgNDAgNDAiPgo8cmVjdCB4PTIwIHk9MTAgd2lkdGg9MTAgaGVpZ2h0PTEwIGNsYXNzPXJlZD4KPC9zdmc+Cg=="];
+                    const decoder = new TextDecoder('utf-8');
+                    setInterval(() => {
+                        document.body.innerHTML = decoder.decode(Uint8Array.fromBase64(frames[window.frameNo]));
+                        window.frameNo = (window.frameNo + 1) % frames.length;
+                    }, 1000);
+                </script></head>
+<body>
+<style>.red{fill:red}
+</style>
+<svg height="40" width="40" viewBox="0 0 40 40">
+<rect x=10 y=10 width=10 height=10 class=red>
+</svg>
+
+</body>
+</html>

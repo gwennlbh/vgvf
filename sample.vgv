@@ -1,0 +1,5 @@
+vgv1
+I1000	height="40" width="40" viewBox="0 0 40 40"
+S.red{fill:red}
+F<rect x=10 y=10 width=10 height=10 class=red>
+D=8	-2	+20	=35
