@@ -41,7 +41,7 @@ impl Renderer {
 
     pub fn svg_tag(&self) -> String {
         format!(
-            r#"<svg width="{w}", height="{h}" {attrs}>{content}</svg>"#,
+            r#"<svg width="{w}" height="{h}" {attrs}>{content}</svg>"#,
             w = self.frame_dimensions.0,
             h = self.frame_dimensions.1,
             attrs = self.svg_attributes,

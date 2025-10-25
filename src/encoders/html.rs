@@ -43,12 +43,38 @@ impl Encoder<String> for HTMLEncoder {
                     <meta charset=\"UTF-8\">
                     <title>VGV Player</title>
                     <script>{script}</script>
-                    <style>{initial_style}</style>
+                    <style>{player_styles}</style>
+                    <style id=framestyles>{initial_style}</style>
                 </head>
                 <body>
                     {initial_body}
                 </body>
             </html>",
+            player_styles = r#"
+                body, html {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                html {
+                    background-color: black;
+                }
+
+                body {
+                    height: 100vh;
+                    width: 100vw;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                }
+
+                svg {
+                    background-color: white;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            "#,
             initial_body = encoded_frames.first().unwrap().svg.from_base64(),
             initial_style = encoded_frames.first().unwrap().style.from_base64(),
             script = format!(
@@ -63,7 +89,7 @@ impl Encoder<String> for HTMLEncoder {
                         window.frameNo = (window.frameNo + 1) % frames.length;
                         const frame = frames[window.frameNo];
                         document.body.innerHTML = fromBase64(frame.svg);
-                        document.querySelector('style').innerHTML = fromBase64(frame.style);
+                        document.querySelector('style#framestyles').innerHTML = fromBase64(frame.style);
                     }}, {frame_duration});
                 "#,
                 frames_array = serde_json::to_string(&encoded_frames).unwrap(),

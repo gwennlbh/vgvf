@@ -23,7 +23,7 @@ pub fn main() {
     )
     .expect("Couldn't write file");
 
-    MP4Encoder::new("output.mp4", "audio.mp3", 800, 600, 30)
+    MP4Encoder::new("output.mp4", 800, 600)
         .encode(frames)
         .expect("Couldn't render to MP4");
 }
