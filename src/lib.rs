@@ -1,4 +1,5 @@
 pub mod parser;
+pub mod renderers;
 
 pub struct InitializationParameters {
     /// Frames duration in milliseconds

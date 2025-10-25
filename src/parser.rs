@@ -1,8 +1,7 @@
-use std::time::Duration;
-
 use crate::{Frame, InitializationParameters};
 use anyhow::{Result, anyhow};
-use diff_match_patch_rs::{Compat, DiffMatchPatch, PatchInput};
+use diff_match_patch_rs::DiffMatchPatch;
+use std::time::Duration;
 
 pub const MAGIC: &str = "vgv1";
 
@@ -70,40 +69,5 @@ impl Parser {
             }
             _ => Err(anyhow!("Unknown frame type {}", first_char)),
         }
-    }
-
-    pub fn parse_incremental(&mut self, frame: &Frame) -> Result<()> {
-        match frame {
-            Frame::Style(rules) => self.stylesheet += &rules,
-            Frame::Full(content) => self.svg_content = content.to_string(),
-            Frame::Initialization(InitializationParameters { d }, svg_attributes) => {
-                self.frame_duration = Duration::from_millis(*d);
-                self.svg_attributes = svg_attributes.clone();
-            }
-            Frame::Delta(delta) => {
-                let (new_frame, _) = self
-                    .dmp
-                    .diff_from_delta::<Compat>(&self.svg_content, &delta)
-                    .and_then(|diffs| self.dmp.patch_make(PatchInput::Diffs(&diffs)))
-                    .and_then(|patches| self.dmp.patch_apply(&patches, &self.svg_content))
-                    .map_err(|e| anyhow!("Failed to apply delta patch: {:?}", e))?;
-
-                self.svg_content = new_frame;
-            }
-        };
-
-        Ok(())
-    }
-
-    pub fn output_html(&self) -> String {
-        let mut html = String::new();
-        html.push_str("<style>");
-        html.push_str(&self.stylesheet);
-        html.push_str("\n</style>\n<svg ");
-        html.push_str(&self.svg_attributes);
-        html.push_str(">\n");
-        html.push_str(&self.svg_content);
-        html.push_str("\n</svg>\n");
-        html
     }
 }
