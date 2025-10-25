@@ -12,6 +12,8 @@ pub struct InitializationParameters {
     pub w: u32,
     /// Frame height
     pub h: u32,
+    /// Backdrop color as CSS color string
+    pub bg: String,
 }
 
 #[derive(Debug, Clone)]

@@ -62,11 +62,17 @@ impl Parser {
                     .ok_or(anyhow!("Missing frame height"))?
                     .parse::<u32>()?;
 
+                let backdrop_color = parts
+                    .next()
+                    .ok_or(anyhow!("Missing backdrop color"))?
+                    .to_string();
+
                 Ok(Frame::Initialization(
                     InitializationParameters {
                         d: frame_duration,
                         w: frame_width,
                         h: frame_height,
+                        bg: backdrop_color,
                     },
                     parts.last().unwrap_or("").to_string(),
                 ))

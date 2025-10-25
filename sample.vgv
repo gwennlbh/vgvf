@@ -1,5 +1,5 @@
 vgv1
-I100	1920	1080	viewBox="0 0 1920 1080"
+I100	1920	1080	black	viewBox="0 0 1920 1080"
 S.red{fill:red}
 F<rect x="10" y="10" width="10" height="10" class="red"></rect>
 D=9	-2	+20	=51

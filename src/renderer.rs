@@ -7,6 +7,7 @@ use diff_match_patch_rs::{Compat, PatchInput};
 #[derive(Default)]
 pub struct Renderer {
     pub svg_attributes: String,
+    pub backdrop: String,
     pub stylesheet: String,
     pub svg_content: String,
     pub frame_duration: std::time::Duration,
@@ -19,10 +20,11 @@ impl Renderer {
         match frame {
             Frame::Style(rules) => self.stylesheet += &rules,
             Frame::Full(content) => self.svg_content = content.to_string(),
-            Frame::Initialization(InitializationParameters { d, w, h }, svg_attributes) => {
+            Frame::Initialization(InitializationParameters { d, w, h, bg }, svg_attributes) => {
                 self.frame_duration = Duration::from_millis(*d);
                 self.frame_dimensions = (*w, *h);
                 self.svg_attributes = svg_attributes.clone();
+                self.backdrop = bg.clone();
             }
             Frame::Delta(delta) => {
                 let (new_frame, _) = self
@@ -41,9 +43,10 @@ impl Renderer {
 
     pub fn svg_tag(&self) -> String {
         format!(
-            r#"<svg width="{w}" height="{h}" {attrs}>{content}</svg>"#,
+            r#"<svg width="{w}" height="{h}" {attrs}><rect width="100%" height="100%" fill="{bg}"/>{content}</svg>"#,
             w = self.frame_dimensions.0,
             h = self.frame_dimensions.1,
+            bg = self.backdrop,
             attrs = self.svg_attributes,
             content = self.svg_content
         )

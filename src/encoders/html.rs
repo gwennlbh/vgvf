@@ -56,11 +56,8 @@ impl Encoder<String> for HTMLEncoder {
                     padding: 0;
                 }
 
-                html {
-                    background-color: black;
-                }
-
                 body {
+                    background-color: darkgray;
                     height: 100vh;
                     width: 100vw;
                     display: flex;
@@ -69,7 +66,6 @@ impl Encoder<String> for HTMLEncoder {
                 }
 
                 svg {
-                    background-color: white;
                     width: 100%;
                     height: 100%;
                     object-fit: contain;
