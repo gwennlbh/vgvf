@@ -1,7 +1,7 @@
 use vgv::{
-    self, MP4Encoder,
-    encoders::{Encoder, html::HTMLEncoder},
+    self, MP4Transcoder,
     parser::VGVParsable,
+    transcoders::{Transcoder, html::HTMLTranscoder},
 };
 
 pub fn main() {
@@ -16,13 +16,13 @@ pub fn main() {
 
     std::fs::write(
         "output.html",
-        HTMLEncoder::new()
+        HTMLTranscoder::new()
             .encode(frames.clone())
             .expect("Couldn't render to HTML"),
     )
     .expect("Couldn't write file");
 
-    MP4Encoder::new("output.mp4", 1920, 1080)
+    MP4Transcoder::new("output.mp4", 1920, 1080)
         .encode(frames)
         .expect("Couldn't render to MP4");
 }

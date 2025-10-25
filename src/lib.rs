@@ -1,6 +1,9 @@
-pub mod encoders;
 pub mod parser;
-pub use encoders::{Encoder, HTMLEncoder, MP4Encoder};
+pub use parser::Parser;
+pub mod encoder;
+pub use encoder::Encoder;
+pub mod transcoders;
+pub use transcoders::{HTMLTranscoder, MP4Transcoder, Transcoder};
 pub mod renderer;
 pub use renderer::Renderer;
 
@@ -31,5 +34,3 @@ pub enum Frame {
     /// Contains SVG content delta
     Delta(String),
 }
-
-pub use parser::Parser;

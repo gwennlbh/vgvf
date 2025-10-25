@@ -1,10 +1,10 @@
-use crate::{Encoder, Frame, Renderer};
+use crate::{Frame, Renderer, Transcoder};
 use anyhow::Result;
 use base64::prelude::*;
 use serde::Serialize;
 
 #[derive(Default)]
-pub struct HTMLEncoder {
+pub struct HTMLTranscoder {
     pub renderer: Renderer,
 }
 
@@ -14,13 +14,13 @@ struct HTMLFrame {
     pub style: String,
 }
 
-impl HTMLEncoder {
+impl HTMLTranscoder {
     pub fn new() -> Self {
         Self::default()
     }
 }
 
-impl Encoder<String> for HTMLEncoder {
+impl Transcoder<String> for HTMLTranscoder {
     fn encode(&mut self, frames: impl IntoIterator<Item = Frame>) -> Result<String> {
         let mut encoded_frames = Vec::new();
 

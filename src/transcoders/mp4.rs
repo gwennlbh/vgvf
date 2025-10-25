@@ -1,14 +1,14 @@
 use std::{io::Write, thread};
 
-use crate::{Encoder, Frame, Renderer};
+use crate::{Frame, Renderer, Transcoder};
 
-pub struct MP4Encoder {
+pub struct MP4Transcoder {
     pub renderer: Renderer,
     pub dimensions: (u32, u32),
     pub output_path: std::path::PathBuf,
 }
 
-impl MP4Encoder {
+impl MP4Transcoder {
     pub fn new(output_file: impl Into<std::path::PathBuf>, width: u32, height: u32) -> Self {
         let output_path = output_file.into();
         Self {
@@ -43,7 +43,7 @@ impl MP4Encoder {
     }
 }
 
-impl Encoder<std::path::PathBuf> for MP4Encoder {
+impl Transcoder<std::path::PathBuf> for MP4Transcoder {
     fn encode(
         &mut self,
         frames: impl IntoIterator<Item = crate::Frame>,
