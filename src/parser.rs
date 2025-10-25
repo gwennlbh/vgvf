@@ -17,6 +17,16 @@ pub struct Parser {
     pub svg_attributes: String,
 }
 
+pub trait VGVParsable {
+    fn parse_as_vgv(&self) -> Result<Vec<Frame>>;
+}
+
+impl VGVParsable for String {
+    fn parse_as_vgv(&self) -> Result<Vec<Frame>> {
+        Parser::new().parse_frames(self)
+    }
+}
+
 impl Parser {
     pub fn new() -> Self {
         Self::default()

@@ -1,6 +1,6 @@
 use base64::prelude::*;
 use diff_match_patch_rs::{Compat, DiffMatchPatch, dmp::Diff};
-use vgv::{self, Frame};
+use vgv::{self, Frame, parser::VGVParsable};
 
 trait Base64Encodable {
     fn to_base64(&self) -> String;
@@ -23,27 +23,9 @@ pub fn main() {
 
     let input_file: String = args.free_from_str().expect("Provide an input file");
 
-    let raw_frames = std::fs::read_to_string(&input_file)
-        .expect(&format!("Failed to read input file {input_file}"));
-
-    let dmp = DiffMatchPatch::new();
-    println!(
-        "{:?}",
-        dmp.diff_to_delta::<Compat>(
-            dmp.diff_main("<rect x=10 y=10>", "<rect x=22 y=10>")
-                .unwrap()
-                .as_slice()
-        )
-        .unwrap()
-    );
-    println!(
-        "{:?}",
-        dmp.diff_from_delta::<Compat>("<rect x=10 y=10>", "=8\t-2\t+20\t=6")
-            .unwrap()
-    );
-
-    let frames = parser
-        .parse_frames(&raw_frames)
+    let frames = std::fs::read_to_string(&input_file)
+        .expect(&format!("Failed to read input file {input_file}"))
+        .parse_as_vgv()
         .expect("Failed to parse frames");
 
     let mut html_frames = Vec::new();
