@@ -1,6 +1,8 @@
+use std::io::Write;
+
 use diff_match_patch_rs::Compat;
 
-use crate::{Frame, InitializationParameters};
+use crate::{Frame, InitializationParameters, parser::MAGIC};
 
 pub struct Encoder {
     pub frames: Vec<Frame>,
@@ -38,5 +40,33 @@ impl Encoder {
         }
 
         self.last_frame_svg = Some(svg_contents);
+    }
+
+    pub fn dump(&self, writer: &mut impl Write) -> () {
+        writeln!(writer, "{MAGIC}").expect("Couldn't write magic header");
+        for frame in &self.frames {
+            writeln!(writer, "{}", frame.encode()).expect("Couldn't write frame")
+        }
+    }
+}
+
+impl Frame {
+    pub fn encode(&self) -> String {
+        match self {
+            Frame::Style(rules) => format!("S{}", rules),
+            Frame::Full(content) => format!("F{}", content),
+            Frame::Delta(delta) => format!("D{}", delta),
+            Frame::Initialization(params, svg_attrs) => format!(
+                "I{}",
+                [
+                    params.d.to_string(),
+                    params.w.to_string(),
+                    params.h.to_string(),
+                    params.bg.clone(),
+                    svg_attrs.to_string()
+                ]
+                .join("\t")
+            ),
+        }
     }
 }
