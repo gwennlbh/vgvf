@@ -53,9 +53,9 @@ impl Encoder {
 impl Frame {
     pub fn encode(&self) -> String {
         match self {
-            Frame::Style(rules) => format!("S{}", rules),
-            Frame::Full(content) => format!("F{}", content),
-            Frame::Delta(delta) => format!("D{}", delta),
+            Frame::Style(rules) => format!("S{}", rules.remove_newlines()),
+            Frame::Full(content) => format!("F{}", content.remove_newlines()),
+            Frame::Delta(delta) => format!("D{}", delta.remove_newlines()),
             Frame::Initialization(params, svg_attrs) => format!(
                 "I{}",
                 [
@@ -66,7 +66,18 @@ impl Frame {
                     svg_attrs.to_string()
                 ]
                 .join("\t")
-            ),
+            )
+            .remove_newlines(),
         }
+    }
+}
+
+trait RemoveNewlines {
+    fn remove_newlines(&self) -> Self;
+}
+
+impl RemoveNewlines for String {
+    fn remove_newlines(&self) -> Self {
+        self.replace("\n", "")
     }
 }
