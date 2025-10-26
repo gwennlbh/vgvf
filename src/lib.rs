@@ -8,22 +8,21 @@ pub mod renderer;
 pub use renderer::Renderer;
 
 #[derive(Debug, Clone)]
-pub struct InitializationParameters {
-    /// Frames duration in milliseconds
-    pub d: u64,
-    /// Frame width
-    pub w: u32,
-    /// Frame height
-    pub h: u32,
-    /// Backdrop color as CSS color string
-    pub bg: String,
-}
-
-#[derive(Debug, Clone)]
 pub enum Frame {
     /// I frame
     /// Contains vgv-specific params, svg attributes
-    Initialization(InitializationParameters, String),
+    Initialization {
+        /// Frames duration in milliseconds
+        d: u64,
+        /// Frame width
+        w: u32,
+        /// Frame height
+        h: u32,
+        /// Backdrop color as CSS color string
+        bg: String,
+        /// Attributes to add to the SVG element
+        svg: String
+    },
     /// S frame
     /// Contains CSS rules
     Style(String),

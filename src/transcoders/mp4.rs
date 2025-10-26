@@ -53,7 +53,7 @@ impl Transcoder<std::path::PathBuf> for MP4Transcoder {
         let mut frames_iterator = frames.into_iter();
 
         match frames_iterator.next() {
-            Some(frame @ Frame::Initialization(_, _)) => {
+            Some(frame @ Frame::Initialization { .. }) => {
                 self.renderer.step(&frame)?;
             }
             _ => {

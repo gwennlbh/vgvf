@@ -1,8 +1,7 @@
-use std::time::Duration;
-
-use crate::{Frame, InitializationParameters};
+use crate::Frame;
 use anyhow::{Result, anyhow};
 use diff_match_patch_rs::{Compat, PatchInput};
+use std::time::Duration;
 
 #[derive(Default)]
 pub struct Renderer {
@@ -18,13 +17,13 @@ pub struct Renderer {
 impl Renderer {
     pub fn step(&mut self, frame: &Frame) -> Result<()> {
         match frame {
-            Frame::Unchanged(_) => {},
+            Frame::Unchanged(_) => {}
             Frame::Style(rules) => self.stylesheet += &rules,
             Frame::Full(content) => self.svg_content = content.to_string(),
-            Frame::Initialization(InitializationParameters { d, w, h, bg }, svg_attributes) => {
+            Frame::Initialization { d, w, h, bg, svg } => {
                 self.frame_duration = Duration::from_millis(*d);
                 self.frame_dimensions = (*w, *h);
-                self.svg_attributes = svg_attributes.clone();
+                self.svg_attributes = svg.clone();
                 self.backdrop = bg.clone();
             }
             Frame::Delta(delta) => {

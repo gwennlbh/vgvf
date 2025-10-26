@@ -1,12 +1,10 @@
-use crate::{Frame, InitializationParameters};
+use crate::Frame;
 use anyhow::{Result, anyhow};
 
 pub const MAGIC: &str = "vgv1";
 
 #[derive(Default)]
 pub struct Parser;
-
-
 
 impl Parser {
     pub fn new() -> Self {
@@ -59,15 +57,13 @@ impl Parser {
                     .ok_or(anyhow!("Missing backdrop color"))?
                     .to_string();
 
-                Ok(Frame::Initialization(
-                    InitializationParameters {
-                        d: frame_duration,
-                        w: frame_width,
-                        h: frame_height,
-                        bg: backdrop_color,
-                    },
-                    parts.last().unwrap_or("").to_string(),
-                ))
+                Ok(Frame::Initialization {
+                    d: frame_duration,
+                    w: frame_width,
+                    h: frame_height,
+                    bg: backdrop_color,
+                    svg: parts.last().unwrap_or("").to_string(),
+                })
             }
             _ => Err(anyhow!("Unknown frame type {}", first_char)),
         }

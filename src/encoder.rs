@@ -1,4 +1,4 @@
-use crate::{Frame, InitializationParameters, parser::MAGIC};
+use crate::{Frame, parser::MAGIC};
 use diff_match_patch_rs::{Compat, Ops};
 use std::io::Write;
 
@@ -11,9 +11,9 @@ pub struct Encoder {
 }
 
 impl Encoder {
-    pub fn new(params: InitializationParameters, svg_attrs: String) -> Self {
+    pub fn new(init_frame: Frame) -> Self {
         Self {
-            frames: vec![Frame::Initialization(params, svg_attrs)],
+            frames: vec![init_frame],
             dmp: diff_match_patch_rs::DiffMatchPatch::new(),
             last_frame_svg: None,
             full_diff_ratio: 100,
@@ -87,14 +87,14 @@ impl Frame {
             Frame::Style(rules) => format!("S{}", rules.remove_newlines()),
             Frame::Full(content) => format!("F{}", content.remove_newlines()),
             Frame::Delta(delta) => format!("D{}", delta.remove_newlines()),
-            Frame::Initialization(params, svg_attrs) => format!(
+            Frame::Initialization { d, w, h, bg, svg } => format!(
                 "I{}",
                 [
-                    params.d.to_string(),
-                    params.w.to_string(),
-                    params.h.to_string(),
-                    params.bg.clone(),
-                    svg_attrs.to_string()
+                    d.to_string(),
+                    w.to_string(),
+                    h.to_string(),
+                    bg.clone(),
+                    svg.to_string()
                 ]
                 .join("\t")
             )
