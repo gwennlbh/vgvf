@@ -1,7 +1,7 @@
 use crate::{Frame, Transcoder, parser::MAGIC};
+use anyhow::{Result, anyhow};
 use diff_match_patch_rs::{Compat, Ops};
-use anyhow::Result;
-use std::io::Write;
+use std::{io::Write, path::PathBuf};
 
 pub struct Encoder {
     dmp: diff_match_patch_rs::DiffMatchPatch,
@@ -81,10 +81,21 @@ impl Encoder {
     }
 }
 
-
 impl Encoder {
     pub fn transcode<T, U: Transcoder<T>>(self, transcoder: &mut U) -> Result<T> {
         transcoder.encode(self.frames)
+    }
+
+    pub fn transcode_to<U: Transcoder<String>>(
+        self,
+        transcoder: &mut U,
+        destination: PathBuf,
+    ) -> Result<()> {
+        std::fs::write(
+            destination.clone(),
+            transcoder.encode(self.frames)?.as_bytes(),
+        )
+        .map_err(|e| anyhow!("couldn't write to {destination:?}: {e:?}"))
     }
 }
 
