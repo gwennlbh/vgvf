@@ -1,5 +1,6 @@
-use crate::{Frame, parser::MAGIC};
+use crate::{Frame, Transcoder, parser::MAGIC};
 use diff_match_patch_rs::{Compat, Ops};
+use anyhow::Result;
 use std::io::Write;
 
 pub struct Encoder {
@@ -77,6 +78,13 @@ impl Encoder {
                 self.last_frame_svg = Some(svg_contents);
             }
         }
+    }
+}
+
+
+impl Encoder {
+    pub fn transcode<T, U: Transcoder<T>>(self, transcoder: &mut U) -> Result<T> {
+        transcoder.encode(self.frames)
     }
 }
 
